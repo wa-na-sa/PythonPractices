@@ -3,22 +3,27 @@
 from urllib.request import urlopen
 import json
 import prettytable as pt
-
-url = "https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date=2018-08-21&leftTicketDTO.from_station=SHH&leftTicketDTO.to_station=BJP&purpose_codes=ADULT"
+url = "https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date=2018-08-20&leftTicketDTO.from_station=SHH&leftTicketDTO.to_station=BJP&purpose_codes=ADULT"
 data = json.loads(urlopen(url).read())
 result = data["data"]["result"]
 n = len(result)#总数
+
+#通过ANSI转移实现彩色输出
+RED = "\033[1;31m"
+GREEN = "\033[1;32m"
+YELLOW = "\033[1;33m"
+DEFAULT = "\033[1;0m"
 
 table = pt.PrettyTable()
 info_list = []
 for index in range(n):
     info = result[index].split("|")
     item = {}
-    item["车次"] = info[3]
-    item["始发站"] = info[6]
-    item["终点站"] = info[7]
-    item["出发时间"] = info[8]
-    item["到站时间"] = info[9]
+    item["车次"] = YELLOW + info[3] + DEFAULT
+    item["始发站"] = GREEN + info[6] + DEFAULT
+    item["终点站"] = RED + info[7] + DEFAULT
+    item["出发时间"] = GREEN + info[8] + DEFAULT
+    item["到站时间"] = RED + info[9] + DEFAULT
     item["历时"] = info[10]
     item["商务座"] = info[32]
     item["一等座"] = info[31]
